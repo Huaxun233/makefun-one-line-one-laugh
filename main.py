@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-# One Line, One Laugh — entrypoint. Prints this entry's one-liner.
-"""Reads entry.txt next to this script so it works from any cwd."""
-
-from pathlib import Path
+"""Print the one-line joke stored in entry.txt next to this script."""
 import sys
+from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-LINE = (HERE / "entry.txt").read_text(encoding="utf-8").strip()
+def main() -> int:
+    entry_path = Path(__file__).resolve().parent / "entry.txt"
+    try:
+        print(entry_path.read_text(encoding="utf-8").strip())
+    except OSError as err:
+        print(f"error: entry file not found or unreadable: {entry_path} ({err.strerror or err})", file=sys.stderr)
+        return 1
+    return 0
 
-if not LINE:
-    sys.stderr.write("entry.txt is empty or missing\n")
-    sys.exit(1)
-
-print(LINE)
-sys.exit(0)
+if __name__ == "__main__":
+    sys.exit(main())

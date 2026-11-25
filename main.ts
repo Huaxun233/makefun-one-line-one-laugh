@@ -1,21 +1,15 @@
 #!/usr/bin/env node
-// One Line, One Laugh — entrypoint. Prints this entry's one-liner.
-// Reads entry.txt next to this script so it works from any cwd.
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const HERE = dirname(fileURLToPath(import.meta.url));
-const FILE = join(HERE, 'entry.txt');
+const here = path.dirname(fileURLToPath(import.meta.url));
+const entryPath = path.join(here, "entry.txt");
 
-function run() {
-  const line = readFileSync(FILE, 'utf8').trim();
-  if (!line) {
-    process.stderr.write('entry.txt is empty\n');
-    return 1;
-  }
-  process.stdout.write(line + '\n');
-  return 0;
+try {
+  const line = (await readFile(entryPath, "utf8")).trim();
+  console.log(line);
+} catch (err) {
+  console.error(`Failed to read ${entryPath}:`, err);
+  process.exit(1);
 }
-
-process.exit(run());
