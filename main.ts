@@ -1,15 +1,9 @@
 #!/usr/bin/env node
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+// One Line, One Laugh — prints the entry line from entry.txt
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const entryPath = path.join(here, "entry.txt");
-
-try {
-  const line = (await readFile(entryPath, "utf8")).trim();
-  console.log(line);
-} catch (err) {
-  console.error(`Failed to read ${entryPath}:`, err);
-  process.exit(1);
-}
+const here = dirname(fileURLToPath(import.meta.url));
+const line = readFileSync(join(here, 'entry.txt'), 'utf8').trim();
+console.log(line);
